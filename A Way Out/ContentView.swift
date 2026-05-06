@@ -6,10 +6,14 @@
 //
 
 import SwiftUI
+import FamilyControls
 
 struct ContentView: View {
     @StateObject private var appState = AppState.shared
+    @StateObject private var nfcManager = NFCManager()
     @State private var showingTagAssignment = false
+    @State private var nfcError: String? = nil
+    @State private var showingNFCError = false
 
     private var blockedGroups: [AppGroup] {
         appState.appGroups.filter { appState.blockedGroupIDs.contains($0.id) }
@@ -28,7 +32,7 @@ struct ContentView: View {
                 if blockedGroups.isEmpty {
                     idleState
                 } else {
-                    blockedGroupsList
+                    blockedState
                 }
 
                 Spacer()
@@ -49,6 +53,16 @@ struct ContentView: View {
             .sheet(isPresented: $showingTagAssignment) {
                 TagAssignmentView(appState: appState)
             }
+            .alert("Couldn't Unblock", isPresented: $showingNFCError) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(nfcError ?? "")
+            }
+            .onChange(of: nfcManager.lastError) { _, error in
+                guard let error else { return }
+                nfcError = error
+                showingNFCError = true
+            }
         }
     }
 
@@ -63,8 +77,8 @@ struct ContentView: View {
         }
     }
 
-    private var blockedGroupsList: some View {
-        VStack(spacing: 16) {
+    private var blockedState: some View {
+        VStack(spacing: 20) {
             Text("A Way Out")
                 .font(.largeTitle.bold())
 
@@ -91,6 +105,45 @@ struct ContentView: View {
                 }
             }
             .padding(.horizontal, 24)
+
+            Button {
+                startUnblockScan()
+            } label: {
+                Group {
+                    if nfcManager.isScanning {
+                        ProgressView()
+                            .tint(.white)
+                    } else {
+                        Label("Tap tag to unblock", systemImage: "wave.3.right")
+                            .font(.subheadline.weight(.medium))
+                    }
+                }
+                .frame(height: 20)
+            }
+            .buttonStyle(.bordered)
+            .controlSize(.regular)
+            .disabled(nfcManager.isScanning)
+        }
+    }
+
+    private func startUnblockScan() {
+        guard appState.assignedTagUID != nil else {
+            nfcError = "No NFC tag assigned. Tap the tag button above to assign one."
+            showingNFCError = true
+            return
+        }
+        nfcManager.startReading(
+            alertMessage: "Hold your NFC tag near the top of your iPhone to unblock apps.",
+            successMessage: "Apps unblocked!"
+        ) { uid in
+            guard uid == appState.assignedTagUID else {
+                nfcError = "Wrong tag. Please tap the tag you assigned to this app."
+                showingNFCError = true
+                return
+            }
+            for group in blockedGroups {
+                appState.deactivateBlocking(for: group.id)
+            }
         }
     }
 
