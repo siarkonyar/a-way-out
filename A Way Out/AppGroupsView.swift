@@ -9,16 +9,18 @@ import FamilyControls
 struct AppGroupsView: View {
     @ObservedObject var appState: AppState
     @StateObject private var nfcManager = NFCManager()
+    @Environment(\.dismiss) private var dismiss
 
     @State private var showingGroupCreation = false
     @State private var editingGroup: AppGroup? = nil
-    @State private var selectedGroupID: UUID? = nil
+    @State private var selectedGroupIDs: Set<UUID> = []
     @State private var nfcError: String? = nil
     @State private var showingNFCError = false
 
-    private var selectedGroup: AppGroup? {
-        guard let id = selectedGroupID else { return nil }
-        return appState.appGroups.first(where: { $0.id == id })
+    private var hasSelection: Bool { !selectedGroupIDs.isEmpty }
+
+    private var allSelectedAreBlocked: Bool {
+        hasSelection && selectedGroupIDs.allSatisfy { appState.blockedGroupIDs.contains($0) }
     }
 
     var body: some View {
@@ -31,10 +33,14 @@ struct AppGroupsView: View {
                         ForEach(appState.appGroups) { group in
                             GroupCard(
                                 group: group,
-                                isSelected: selectedGroupID == group.id,
+                                isSelected: selectedGroupIDs.contains(group.id),
                                 isBlocked: appState.blockedGroupIDs.contains(group.id)
                             ) {
-                                selectedGroupID = selectedGroupID == group.id ? nil : group.id
+                                if selectedGroupIDs.contains(group.id) {
+                                    selectedGroupIDs.remove(group.id)
+                                } else {
+                                    selectedGroupIDs.insert(group.id)
+                                }
                             }
                             .contextMenu {
                                 Button { editingGroup = group } label: {
@@ -42,7 +48,7 @@ struct AppGroupsView: View {
                                 }
                                 Button(role: .destructive) {
                                     appState.deleteGroup(id: group.id)
-                                    if selectedGroupID == group.id { selectedGroupID = nil }
+                                    selectedGroupIDs.remove(group.id)
                                 } label: {
                                     Label("Delete", systemImage: "trash")
                                 }
@@ -63,17 +69,17 @@ struct AppGroupsView: View {
                 }
                 .padding(.horizontal, 24)
                 .padding(.vertical, 12)
-                .padding(.bottom, selectedGroup != nil ? 80 : 0)
+                .padding(.bottom, hasSelection ? 80 : 0)
             }
 
-            if let group = selectedGroup {
-                blockButton(for: group)
+            if hasSelection {
+                blockButton
                     .padding(.horizontal, 24)
                     .padding(.bottom, 16)
                     .transition(.move(edge: .bottom).combined(with: .opacity))
             }
         }
-        .animation(.spring(duration: 0.3), value: selectedGroupID)
+        .animation(.spring(duration: 0.3), value: hasSelection)
         .navigationTitle("Block Apps")
         .navigationBarTitleDisplayMode(.large)
         .sheet(isPresented: $showingGroupCreation) {
@@ -109,17 +115,23 @@ struct AppGroupsView: View {
         .padding(.vertical, 60)
     }
 
-    private func blockButton(for group: AppGroup) -> some View {
-        let isBlocked = appState.blockedGroupIDs.contains(group.id)
-        return Button {
-            startNFCScan(groupID: group.id, blocking: !isBlocked)
+    @ViewBuilder
+    private var blockButton: some View {
+        let count = selectedGroupIDs.count
+        let blocking = !allSelectedAreBlocked
+        let label = blocking
+            ? "Block \(count) Group\(count == 1 ? "" : "s")"
+            : "Unblock \(count) Group\(count == 1 ? "" : "s")"
+
+        Button {
+            startNFCScan(blocking: blocking)
         } label: {
             Group {
                 if nfcManager.isScanning {
                     ProgressView()
                         .tint(.white)
                 } else {
-                    Text(isBlocked ? "Unblock \"\(group.name)\"" : "Block \"\(group.name)\"")
+                    Text(label)
                         .font(.headline)
                 }
             }
@@ -127,12 +139,12 @@ struct AppGroupsView: View {
             .frame(height: 24)
         }
         .buttonStyle(.borderedProminent)
-        .tint(isBlocked ? .orange : .red)
+        .tint(blocking ? .red : .orange)
         .controlSize(.large)
         .disabled(nfcManager.isScanning)
     }
 
-    private func startNFCScan(groupID: UUID, blocking: Bool) {
+    private func startNFCScan(blocking: Bool) {
         guard appState.assignedTagUID != nil else {
             nfcError = "No NFC tag assigned. Go back and assign a tag first."
             showingNFCError = true
@@ -148,12 +160,17 @@ struct AppGroupsView: View {
                 showingNFCError = true
                 return
             }
-            if blocking {
-                appState.activateBlocking(for: groupID)
-            } else {
-                appState.deactivateBlocking(for: groupID)
+            for id in selectedGroupIDs {
+                if blocking {
+                    appState.activateBlocking(for: id)
+                } else {
+                    appState.deactivateBlocking(for: id)
+                }
             }
-            selectedGroupID = nil
+            selectedGroupIDs = []
+            if blocking {
+                dismiss()
+            }
         }
     }
 }
