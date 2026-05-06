@@ -6,6 +6,9 @@
 import Foundation
 import Combine
 import FamilyControls
+#if os(iOS)
+import ManagedSettings
+#endif
 
 final class AppState: ObservableObject {
     static let shared = AppState()
@@ -17,11 +20,15 @@ final class AppState: ObservableObject {
     private let uidKey = "assignedTagUID"
     private let groupsKey = "appGroups"
     private let blockedGroupsKey = "blockedGroupIDs"
+    #if os(iOS)
+    private let store = ManagedSettingsStore()
+    #endif
 
     private init() {
         assignedTagUID = UserDefaults.standard.string(forKey: uidKey)
         loadGroups()
         loadBlockedGroups()
+        applyShields()
     }
 
     func assignTag(uid: String) {
@@ -57,16 +64,30 @@ final class AppState: ObservableObject {
         blockedGroupIDs.remove(id)
         saveGroups()
         saveBlockedGroups()
+        applyShields()
     }
 
     func activateBlocking(for groupID: UUID) {
         blockedGroupIDs.insert(groupID)
         saveBlockedGroups()
+        applyShields()
     }
 
     func deactivateBlocking(for groupID: UUID) {
         blockedGroupIDs.remove(groupID)
         saveBlockedGroups()
+        applyShields()
+    }
+
+    private func applyShields() {
+        #if os(iOS)
+        let blocked = appGroups.filter { blockedGroupIDs.contains($0.id) }
+        let appTokens = blocked.reduce(into: Set<ApplicationToken>()) { $0.formUnion($1.selection.applicationTokens) }
+        let categoryTokens = blocked.reduce(into: Set<ActivityCategoryToken>()) { $0.formUnion($1.selection.categoryTokens) }
+
+        store.shield.applications = appTokens.isEmpty ? nil : appTokens
+        store.shield.applicationCategories = categoryTokens.isEmpty ? nil : .specific(categoryTokens)
+        #endif
     }
 
     private func saveGroups() {
