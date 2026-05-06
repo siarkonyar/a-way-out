@@ -5,16 +5,20 @@
 
 import Foundation
 import Combine
+import FamilyControls
 
 final class AppState: ObservableObject {
     static let shared = AppState()
 
     @Published private(set) var assignedTagUID: String?
+    @Published private(set) var appGroups: [AppGroup] = []
 
     private let uidKey = "assignedTagUID"
+    private let groupsKey = "appGroups"
 
     private init() {
         assignedTagUID = UserDefaults.standard.string(forKey: uidKey)
+        loadGroups()
     }
 
     func assignTag(uid: String) {
@@ -25,5 +29,35 @@ final class AppState: ObservableObject {
     func clearTag() {
         assignedTagUID = nil
         UserDefaults.standard.removeObject(forKey: uidKey)
+    }
+
+    func addGroup(_ group: AppGroup) {
+        appGroups.append(group)
+        saveGroups()
+    }
+
+    func updateGroup(_ group: AppGroup) {
+        guard let index = appGroups.firstIndex(where: { $0.id == group.id }) else { return }
+        appGroups[index] = group
+        saveGroups()
+    }
+
+    func deleteGroups(at offsets: IndexSet) {
+        for index in offsets.sorted().reversed() {
+            appGroups.remove(at: index)
+        }
+        saveGroups()
+    }
+
+    private func saveGroups() {
+        if let data = try? JSONEncoder().encode(appGroups) {
+            UserDefaults.standard.set(data, forKey: groupsKey)
+        }
+    }
+
+    private func loadGroups() {
+        guard let data = UserDefaults.standard.data(forKey: groupsKey),
+              let groups = try? JSONDecoder().decode([AppGroup].self, from: data) else { return }
+        appGroups = groups
     }
 }

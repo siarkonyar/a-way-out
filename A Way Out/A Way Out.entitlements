@@ -8,5 +8,7 @@
 		<string>PACE</string>
 		<string>NDEF</string>
 	</array>
+	<key>com.apple.developer.family-controls</key>
+	<true/>
 </dict>
 </plist>

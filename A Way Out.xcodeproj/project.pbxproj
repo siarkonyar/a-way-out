@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		C90B403B2FAB64DA0014B653 /* FamilyControls.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C90B403A2FAB64DA0014B653 /* FamilyControls.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		C910D2112FAA635D005C6123 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,6 +28,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C90B403A2FAB64DA0014B653 /* FamilyControls.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FamilyControls.framework; path = System/Library/Frameworks/FamilyControls.framework; sourceTree = SDKROOT; };
 		C910D2032FAA635A005C6123 /* A Way Out.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "A Way Out.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C910D2102FAA635D005C6123 /* A Way OutTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "A Way OutTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C910D21A2FAA635D005C6123 /* A Way OutUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "A Way OutUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -52,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C90B403B2FAB64DA0014B653 /* FamilyControls.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,12 +78,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C90B40392FAB64D90014B653 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C90B403A2FAB64DA0014B653 /* FamilyControls.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		C910D1FA2FAA635A005C6123 = {
 			isa = PBXGroup;
 			children = (
 				C910D2052FAA635A005C6123 /* A Way Out */,
 				C910D2132FAA635D005C6123 /* A Way OutTests */,
 				C910D21D2FAA635D005C6123 /* A Way OutUITests */,
+				C90B40392FAB64D90014B653 /* Frameworks */,
 				C910D2042FAA635A005C6123 /* Products */,
 			);
 			sourceTree = "<group>";
