@@ -14,15 +14,30 @@ final class NFCManager: NSObject, ObservableObject {
     private var session: NFCTagReaderSession?
     private var onTagRead: ((String) -> Void)?
 
+    private var successMessage = "Tag read!"
+
     func startRegistration(onRead: @escaping (String) -> Void) {
+        start(
+            alertMessage: "Hold your NFC tag near the top of your iPhone.",
+            successMessage: "Tag registered!",
+            onRead: onRead
+        )
+    }
+
+    func startReading(alertMessage: String = "Hold your NFC tag near the top of your iPhone.", successMessage: String = "Tag read!", onRead: @escaping (String) -> Void) {
+        start(alertMessage: alertMessage, successMessage: successMessage, onRead: onRead)
+    }
+
+    private func start(alertMessage: String, successMessage: String, onRead: @escaping (String) -> Void) {
         guard NFCTagReaderSession.readingAvailable else {
             lastError = "NFC is not available on this device."
             return
         }
         onTagRead = onRead
+        self.successMessage = successMessage
         lastError = nil
         session = NFCTagReaderSession(pollingOption: [.iso14443, .iso15693], delegate: self, queue: nil)
-        session?.alertMessage = "Hold your NFC tag near the top of your iPhone."
+        session?.alertMessage = alertMessage
         session?.begin()
         DispatchQueue.main.async { self.isScanning = true }
     }
@@ -65,7 +80,7 @@ extension NFCManager: NFCTagReaderSessionDelegate {
                 return
             }
 
-            session.alertMessage = "Tag registered!"
+            session.alertMessage = self.successMessage
             session.invalidate()
 
             DispatchQueue.main.async {

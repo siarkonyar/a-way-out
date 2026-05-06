@@ -12,13 +12,16 @@ final class AppState: ObservableObject {
 
     @Published private(set) var assignedTagUID: String?
     @Published private(set) var appGroups: [AppGroup] = []
+    @Published private(set) var blockedGroupIDs: Set<UUID> = []
 
     private let uidKey = "assignedTagUID"
     private let groupsKey = "appGroups"
+    private let blockedGroupsKey = "blockedGroupIDs"
 
     private init() {
         assignedTagUID = UserDefaults.standard.string(forKey: uidKey)
         loadGroups()
+        loadBlockedGroups()
     }
 
     func assignTag(uid: String) {
@@ -49,6 +52,23 @@ final class AppState: ObservableObject {
         saveGroups()
     }
 
+    func deleteGroup(id: UUID) {
+        appGroups.removeAll { $0.id == id }
+        blockedGroupIDs.remove(id)
+        saveGroups()
+        saveBlockedGroups()
+    }
+
+    func activateBlocking(for groupID: UUID) {
+        blockedGroupIDs.insert(groupID)
+        saveBlockedGroups()
+    }
+
+    func deactivateBlocking(for groupID: UUID) {
+        blockedGroupIDs.remove(groupID)
+        saveBlockedGroups()
+    }
+
     private func saveGroups() {
         if let data = try? JSONEncoder().encode(appGroups) {
             UserDefaults.standard.set(data, forKey: groupsKey)
@@ -59,5 +79,15 @@ final class AppState: ObservableObject {
         guard let data = UserDefaults.standard.data(forKey: groupsKey),
               let groups = try? JSONDecoder().decode([AppGroup].self, from: data) else { return }
         appGroups = groups
+    }
+
+    private func saveBlockedGroups() {
+        let strings = blockedGroupIDs.map { $0.uuidString }
+        UserDefaults.standard.set(strings, forKey: blockedGroupsKey)
+    }
+
+    private func loadBlockedGroups() {
+        guard let strings = UserDefaults.standard.stringArray(forKey: blockedGroupsKey) else { return }
+        blockedGroupIDs = Set(strings.compactMap { UUID(uuidString: $0) })
     }
 }
