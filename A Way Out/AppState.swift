@@ -85,8 +85,12 @@ final class AppState: ObservableObject {
         let appTokens = blocked.reduce(into: Set<ApplicationToken>()) { $0.formUnion($1.selection.applicationTokens) }
         let categoryTokens = blocked.reduce(into: Set<ActivityCategoryToken>()) { $0.formUnion($1.selection.categoryTokens) }
 
-        store.shield.applications = appTokens.isEmpty ? nil : appTokens
-        store.shield.applicationCategories = categoryTokens.isEmpty ? nil : .specific(categoryTokens)
+        if appTokens.isEmpty && categoryTokens.isEmpty {
+            store.clearAllSettings()
+        } else {
+            store.shield.applications = appTokens
+            store.shield.applicationCategories = .specific(categoryTokens)
+        }
         #endif
     }
 
