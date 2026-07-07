@@ -68,8 +68,11 @@ struct ContentView: View {
 
     private var idleState: some View {
         VStack(spacing: 8) {
-            Text("A Way Out")
-                .font(.largeTitle.bold())
+            VStack(spacing: 2) {
+                Text("A Way Out")
+                    .font(.largeTitle.bold())
+                HerculeCredit()
+            }
             Text("Use a physical NFC tag to block\ndistracting apps.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
@@ -79,8 +82,11 @@ struct ContentView: View {
 
     private var blockedState: some View {
         VStack(spacing: 20) {
-            Text("A Way Out")
-                .font(.largeTitle.bold())
+            VStack(spacing: 2) {
+                Text("A Way Out")
+                    .font(.largeTitle.bold())
+                HerculeCredit()
+            }
 
             VStack(spacing: 8) {
                 ForEach(blockedGroups) { group in
