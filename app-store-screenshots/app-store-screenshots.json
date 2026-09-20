@@ -1,0 +1,232 @@
+{
+  "appName": "A Way Out",
+  "themeId": "dark-bold",
+  "locales": [
+    "en"
+  ],
+  "locale": "en",
+  "device": "ipad",
+  "orientation": "portrait",
+  "appIcon": "/app-icon.png",
+  "slidesByDevice": {
+    "iphone": [
+      {
+        "id": "s_mrax49ev_0",
+        "layout": "two-devices",
+        "label": {
+          "en": "A WAY OUT"
+        },
+        "headline": {
+          "en": "Block distracting apps\nwith any NFC tag."
+        },
+        "screenshot": "/screenshots/apple/iphone/{locale}/05.png",
+        "screenshotSecondary": "/screenshots/apple/iphone/{locale}/05.png"
+      },
+      {
+        "id": "s_mrax49ev_1",
+        "layout": "device-bottom",
+        "label": {
+          "en": "CHOOSE"
+        },
+        "headline": {
+          "en": "Pick exactly what\nsteals your focus."
+        },
+        "screenshot": "/screenshots/apple/iphone/{locale}/02.png"
+      },
+      {
+        "id": "s_mrax49ev_2",
+        "layout": "device-bottom",
+        "label": {
+          "en": "ORGANIZE"
+        },
+        "headline": {
+          "en": "Group your blocks.\nLock them in a tap."
+        },
+        "screenshot": "/screenshots/apple/iphone/{locale}/03.png"
+      },
+      {
+        "id": "s_mrax49ev_3",
+        "layout": "device-top",
+        "label": {
+          "en": "PHYSICAL FRICTION"
+        },
+        "headline": {
+          "en": "Tap a real tag.\nBreak the habit."
+        },
+        "screenshot": "/screenshots/apple/iphone/{locale}/04.png"
+      },
+      {
+        "id": "s_mrax49ev_4",
+        "layout": "hero",
+        "label": {
+          "en": "NO SHORTCUTS"
+        },
+        "headline": {
+          "en": "The only way back\nis a deliberate tap."
+        },
+        "screenshot": "/screenshots/apple/iphone/{locale}/01.png"
+      }
+    ],
+    "android": [
+      {
+        "id": "s_mrax49ev_5",
+        "layout": "hero",
+        "label": {
+          "en": "A WAY OUT"
+        },
+        "headline": {
+          "en": "Block distracting apps\nwith any NFC tag."
+        },
+        "screenshot": "/screenshots/apple/iphone/{locale}/01.png"
+      },
+      {
+        "id": "s_mrax49ev_6",
+        "layout": "device-bottom",
+        "label": {
+          "en": "CHOOSE"
+        },
+        "headline": {
+          "en": "Pick exactly what\nsteals your focus."
+        },
+        "screenshot": "/screenshots/apple/iphone/{locale}/02.png"
+      },
+      {
+        "id": "s_mrax49ev_7",
+        "layout": "device-top",
+        "label": {
+          "en": "ORGANIZE"
+        },
+        "headline": {
+          "en": "Group your blocks.\nLock them in a tap."
+        },
+        "screenshot": "/screenshots/apple/iphone/{locale}/03.png"
+      },
+      {
+        "id": "s_mrax49ev_8",
+        "layout": "device-bottom",
+        "label": {
+          "en": "PHYSICAL FRICTION"
+        },
+        "headline": {
+          "en": "Tap a real tag.\nBreak the habit."
+        },
+        "screenshot": "/screenshots/apple/iphone/{locale}/04.png"
+      },
+      {
+        "id": "s_mrax49ev_9",
+        "layout": "hero",
+        "label": {
+          "en": "NO SHORTCUTS"
+        },
+        "headline": {
+          "en": "The only way back\nis a deliberate tap."
+        },
+        "screenshot": "/screenshots/apple/iphone/{locale}/05.png"
+      }
+    ],
+    "ipad": [
+      {
+        "id": "s_mrax49ev_a",
+        "layout": "split-landscape",
+        "label": {
+          "en": "A WAY OUT"
+        },
+        "headline": {
+          "en": "Block distracting apps\nwith any NFC tag."
+        },
+        "screenshot": "/screenshots/apple/ipad/{locale}/01.png",
+        "transforms": {
+          "caption": {
+            "x": 103.19997494994763,
+            "y": 688.0000033464211,
+            "width": 1185,
+            "height": 1376,
+            "rotation": 0,
+            "zIndex": 4
+          }
+        }
+      },
+      {
+        "id": "s_mrax49ev_b",
+        "layout": "device-bottom",
+        "label": {
+          "en": "CHOOSE"
+        },
+        "headline": {
+          "en": "Pick exactly what\nsteals your focus."
+        },
+        "screenshot": "/screenshots/apple/ipad/{locale}/03.png"
+      },
+      {
+        "id": "s_mrax49ev_c",
+        "layout": "device-bottom",
+        "label": {
+          "en": "ANY NFC TAG"
+        },
+        "headline": {
+          "en": "Use any NFC tag\nyou already own."
+        },
+        "screenshot": "/screenshots/apple/ipad/{locale}/02.png"
+      }
+    ],
+    "android-7": [
+      {
+        "id": "s_mrax49ev_d",
+        "layout": "hero",
+        "label": {
+          "en": "MEET YOUR APP"
+        },
+        "headline": {
+          "en": "Pocket-sized\npower."
+        },
+        "screenshot": ""
+      },
+      {
+        "id": "s_mrax49ev_e",
+        "layout": "split-landscape",
+        "label": {
+          "en": "FEATURE 01"
+        },
+        "headline": {
+          "en": "Wide canvas,\nbigger ideas."
+        },
+        "screenshot": ""
+      }
+    ],
+    "android-10": [
+      {
+        "id": "s_mrax49ev_f",
+        "layout": "hero",
+        "label": {
+          "en": "MEET YOUR APP"
+        },
+        "headline": {
+          "en": "Made for\nthe big screen."
+        },
+        "screenshot": ""
+      },
+      {
+        "id": "s_mrax49ev_g",
+        "layout": "split-landscape",
+        "label": {
+          "en": "FEATURE 01"
+        },
+        "headline": {
+          "en": "Wide canvas,\nbigger ideas."
+        },
+        "screenshot": ""
+      }
+    ],
+    "feature-graphic": [
+      {
+        "id": "s_mrax49ev_h",
+        "layout": "feature-graphic",
+        "label": {},
+        "headline": {
+          "en": "Your tagline goes here."
+        },
+        "screenshot": ""
+      }
+    ]
+  }
+}
